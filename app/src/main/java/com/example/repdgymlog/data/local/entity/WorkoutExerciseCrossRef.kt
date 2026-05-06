@@ -2,8 +2,11 @@ package com.example.repdgymlog.data.local.entity
 
 import androidx.room.Entity
 
-@Entity(primaryKeys = ["workoutId", "exerciseId"])
+@Entity(
+    tableName = "workout_exercise_cross_ref",
+    primaryKeys = ["workoutId", "exerciseId"]
+)
 data class WorkoutExerciseCrossRef(
-    val workoutId: Int,
-    val exerciseId: Int
+    val workoutId: Long,
+    val exerciseId: Long
 )

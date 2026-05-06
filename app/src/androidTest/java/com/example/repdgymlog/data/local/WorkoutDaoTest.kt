@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.example.repdgymlog.data.local.dao.WorkoutDao
 import com.example.repdgymlog.data.local.entity.WorkoutEntity
 import kotlinx.coroutines.test.runTest
 import org.hamcrest.CoreMatchers.equalTo
@@ -35,14 +36,14 @@ class WorkoutDaoTest {
     }
 
     @Test
-    fun insertAndQueryExercise() = runTest {
-        val workout = WorkoutEntity(workoutId = 1, name = "Upper")
+    fun insertAndQueryWorkout() = runTest {
+        val workout = WorkoutEntity(workoutId = 1, workoutName = "Upper")
         workoutDao.insertWorkout(workout)
 
-        var allWorkouts = workoutDao.getAllWorkouts()
+        val allWorkouts = workoutDao.getAllWorkouts()
         assertThat(allWorkouts[0], equalTo(workout))
 
-        val rowsDeleted = workoutDao.deleteWorkout(workout)
+        val rowsDeleted = workoutDao.deleteWorkout(workout.workoutId)
         assertThat(rowsDeleted, `is`(1))
         assertThat(workoutDao.getAllWorkouts().contains(workout), `is`(false))
     }

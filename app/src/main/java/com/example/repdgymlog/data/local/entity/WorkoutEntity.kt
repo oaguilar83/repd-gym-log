@@ -7,6 +7,7 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "workouts")
 data class WorkoutEntity(
     @PrimaryKey(autoGenerate = true)
-    val workoutId: Int = 0,
-    val name: String,
+    val workoutId: Long = 0,
+    @ColumnInfo(name = "name")
+    val workoutName: String,
 )
