@@ -36,15 +36,55 @@ class WorkoutDaoTest {
     }
 
     @Test
-    fun insertAndQueryWorkout() = runTest {
+    fun insertWorkout_persistsWorkoutInDatabase() = runTest {
         val workout = WorkoutEntity(workoutId = 1, workoutName = "Upper")
         workoutDao.insertWorkout(workout)
 
         val allWorkouts = workoutDao.getAllWorkouts()
+
+        assertThat(allWorkouts.size, `is`(1))
         assertThat(allWorkouts[0], equalTo(workout))
+    }
+
+    @Test
+    fun deleteWorkout_returnsZero_whenWorkoutDoesNotExist() = runTest {
+        val rowsDeleted = workoutDao.deleteWorkout(workoutId = 999)
+
+        assertThat(rowsDeleted, `is`(0))
+    }
+
+    @Test
+    fun deleteWorkout_returnsOne_whenWorkoutExists() = runTest {
+        val workout = WorkoutEntity(workoutId = 1, workoutName = "Upper")
+        workoutDao.insertWorkout(workout)
 
         val rowsDeleted = workoutDao.deleteWorkout(workout.workoutId)
+
         assertThat(rowsDeleted, `is`(1))
-        assertThat(workoutDao.getAllWorkouts().contains(workout), `is`(false))
+        assertThat(workoutDao.getAllWorkouts().isEmpty(), `is`(true))
+    }
+
+    @Test
+    fun getAllWorkouts_returnsEmptyList_whenDatabaseIsEmpty() = runTest {
+        val allWorkouts = workoutDao.getAllWorkouts()
+
+        assertThat(allWorkouts.isEmpty(), `is`(true))
+    }
+
+    @Test
+    fun getAllWorkouts_returnsAllInsertedWorkouts() = runTest {
+        val workout1 = WorkoutEntity(workoutId = 1, workoutName = "Push")
+        val workout2 = WorkoutEntity(workoutId = 2, workoutName = "Pull")
+        val workout3 = WorkoutEntity(workoutId = 3, workoutName = "Legs")
+        workoutDao.insertWorkout(workout1)
+        workoutDao.insertWorkout(workout2)
+        workoutDao.insertWorkout(workout3)
+
+        val allWorkouts = workoutDao.getAllWorkouts()
+
+        assertThat(allWorkouts.size, `is`(3))
+        assertThat(allWorkouts.contains(workout1), `is`(true))
+        assertThat(allWorkouts.contains(workout2), `is`(true))
+        assertThat(allWorkouts.contains(workout3), `is`(true))
     }
 }

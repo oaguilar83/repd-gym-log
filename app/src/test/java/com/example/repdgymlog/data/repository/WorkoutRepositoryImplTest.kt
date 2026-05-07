@@ -188,5 +188,4 @@ class WorkoutRepositoryImplTest {
 
         coVerify { exerciseDao.deleteExercise(55L) }
     }
-
 }

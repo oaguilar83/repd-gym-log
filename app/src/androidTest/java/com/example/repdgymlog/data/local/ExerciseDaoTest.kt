@@ -41,16 +41,66 @@ class ExerciseDaoTest {
     }
 
     @Test
-    fun insertAndQueryExercise() = runTest {
+    fun insertExercise_persistsExerciseInDatabase() = runTest {
         val exercise = ExerciseEntity(exerciseId = 1, exerciseName = "RDLs")
         exerciseDao.insertExercise(exercise)
 
         val allExercises = exerciseDao.getAllExercises()
+
+        assertThat(allExercises.size, `is`(1))
         assertThat(allExercises[0], equalTo(exercise))
+    }
+
+    @Test
+    fun deleteExercise_returnsZero_whenExerciseDoesNotExist() = runTest {
+        val rowsDeleted = exerciseDao.deleteExercise(exerciseId = 999)
+
+        assertThat(rowsDeleted, `is`(0))
+    }
+
+    @Test
+    fun deleteExercise_returnsOne_whenExerciseExists() = runTest {
+        val exercise = ExerciseEntity(exerciseId = 1, exerciseName = "RDLs")
+        exerciseDao.insertExercise(exercise)
 
         val rowsDeleted = exerciseDao.deleteExercise(exercise.exerciseId)
+
         assertThat(rowsDeleted, `is`(1))
-        assertThat(exerciseDao.getAllExercises().contains(exercise), `is`(false))
+        assertThat(exerciseDao.getAllExercises().isEmpty(), `is`(true))
+    }
+
+    @Test
+    fun getAllExercises_returnsEmptyList_whenDatabaseIsEmpty() = runTest {
+        val allExercises = exerciseDao.getAllExercises()
+
+        assertThat(allExercises.isEmpty(), `is`(true))
+    }
+
+    @Test
+    fun getAllExercises_returnsAllInsertedExercises() = runTest {
+        val exercise1 = ExerciseEntity(exerciseId = 1, exerciseName = "Squat")
+        val exercise2 = ExerciseEntity(exerciseId = 2, exerciseName = "Deadlift")
+        val exercise3 = ExerciseEntity(exerciseId = 3, exerciseName = "Bench Press")
+        exerciseDao.insertExercise(exercise1)
+        exerciseDao.insertExercise(exercise2)
+        exerciseDao.insertExercise(exercise3)
+
+        val allExercises = exerciseDao.getAllExercises()
+
+        assertThat(allExercises.size, `is`(3))
+        assertThat(allExercises.contains(exercise1), `is`(true))
+        assertThat(allExercises.contains(exercise2), `is`(true))
+        assertThat(allExercises.contains(exercise3), `is`(true))
+    }
+
+    @Test
+    fun getExercisesForWorkout_returnsEmptyList_whenNoExercisesLinked() = runTest {
+        val workout = WorkoutEntity(workoutId = 1, workoutName = "Push")
+        workoutDao.insertWorkout(workout)
+
+        val exercises = exerciseDao.getExercisesForWorkout(workoutId = 1)
+
+        assertThat(exercises.isEmpty(), `is`(true))
     }
 
     @Test

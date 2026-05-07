@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt.android)
+    alias(libs.plugins.kover)
 }
 
 android {
@@ -38,6 +39,33 @@ android {
     }
     buildFeatures {
         compose = true
+    }
+}
+
+kover {
+    reports {
+        filters {
+            excludes {
+                classes(
+                    "*.BuildConfig",
+                    "*.R",
+                    "*.R$*",
+                    // Hilt/Dagger generated
+                    "*_MembersInjector",
+                    "*_MembersInjector$*",
+                    "*Dagger*",
+                    "*_Factory",
+                    "*_Factory$*",
+                    "*_HiltModules*",
+                    "*Hilt_*",
+                    // Compose generated
+                    "*ComposableSingletons*",
+                    // Room generated
+                    "*_Impl",
+                    "*_Impl$*",
+                )
+            }
+        }
     }
 }
 
