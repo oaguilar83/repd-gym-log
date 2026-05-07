@@ -25,7 +25,7 @@ class ExerciseDaoTest {
     private lateinit var workoutDao: WorkoutDao
 
     @Before
-    fun createDb() {
+    fun setUp() {
         val context = ApplicationProvider.getApplicationContext<Context>()
         db = Room.inMemoryDatabaseBuilder(
             context,
@@ -36,7 +36,7 @@ class ExerciseDaoTest {
     }
 
     @After
-    fun closeDb() {
+    fun tearDown() {
         db.close()
     }
 

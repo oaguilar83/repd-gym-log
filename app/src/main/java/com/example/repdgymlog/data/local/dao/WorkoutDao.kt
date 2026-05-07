@@ -9,7 +9,7 @@ import com.example.repdgymlog.data.local.entity.WorkoutExerciseCrossRef
 @Dao
 interface WorkoutDao {
     @Insert
-    suspend fun insertWorkout(workout: WorkoutEntity)
+    suspend fun insertWorkout(workout: WorkoutEntity): Long
 
     @Insert
     suspend fun insertCrossRef(crossRef: WorkoutExerciseCrossRef)

@@ -8,7 +8,7 @@ import com.example.repdgymlog.data.local.entity.ExerciseEntity
 @Dao
 interface ExerciseDao {
     @Insert
-    suspend fun insertExercise(exercise: ExerciseEntity)
+    suspend fun insertExercise(exercise: ExerciseEntity): Long
 
     @Query("DELETE FROM exercises WHERE exerciseId = :exerciseId")
     suspend fun deleteExercise(exerciseId: Long): Int
